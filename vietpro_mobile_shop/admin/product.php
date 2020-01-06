@@ -58,7 +58,7 @@ $list_page .= '<li class="page-item"><a class="page-link" href="index.php?page_l
     </div>
     <!--/.row-->
     <div id="toolbar" class="btn-group">
-        <a href="product-add.html" class="btn btn-success">
+        <a href="index.php?page_layout=add_product" class="btn btn-success">
             <i class="glyphicon glyphicon-plus"></i> Thêm sản phẩm
         </a>
     </div>

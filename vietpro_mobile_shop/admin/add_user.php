@@ -1,5 +1,30 @@
 
-		
+	<?php 
+    $temp=0;
+    $temp1=0;
+    if(isset($_POST['sbm'])){        
+        $user_full = $_POST['user_full'];
+        $user_mail = $_POST['user_mail'];
+        $user_pass = $_POST['user_pass'];
+        $user_re_pass = $_POST['user_re_pass'];
+        $user_level = $_POST['user_level'];
+        $sql_cat = "SELECT * FROM user";
+        $query_cat = mysqli_query($connect,$sql_cat);
+        if($user_pass != $user_re_pass){
+            $temp1=1;
+        }
+        while($row_cat=mysqli_fetch_assoc($query_cat)){
+            if($row_cat['user_mail'] == $user_mail){
+                $temp=1;
+            }
+        }
+        if($temp==0&&$temp1==0){
+            $sql = "INSERT INTO user(user_full,user_mail,user_pass,user_level) VALUES ('$user_full','$user_mail','$user_pass','$user_level')";
+            $query= mysqli_query($connect,$sql);
+            header('location:index.php?page_layout=user');
+        }
+    }
+?>	
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
@@ -19,7 +44,15 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="col-md-8">
-                            	<div class="alert alert-danger">Email đã tồn tại !</div>
+                            <?php
+                                    if($temp1==1&&$temp==1){
+                                        echo ' <div class="alert alert-danger">Email đã tồn tại vaf mật khẩu không khớp !</div>';
+                                    }elseif ($temp1==1) {
+                                        echo ' <div class="alert alert-danger">Mật khẩu không khớp !</div>';
+                                    }elseif($temp==1){
+                                        echo ' <div class="alert alert-danger">Email đã tồn tại!</div>';
+                                    }
+                                 ?>
                                 <form role="form" method="post">
                                 <div class="form-group">
                                     <label>Họ & Tên</label>
@@ -40,8 +73,8 @@
                                 <div class="form-group">
                                     <label>Quyền</label>
                                     <select name="user_level" class="form-control">
-                                        <option value=1>Admin</option>
-                                        <option value=2>Member</option>
+                                    <option value="1">Admin</option>
+                                    <option value="2">Memberr</option>
                                     </select>
                                 </div>
                                 <button name="sbm" type="submit" class="btn btn-success">Thêm mới</button>

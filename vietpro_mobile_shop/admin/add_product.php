@@ -24,13 +24,13 @@
     $sql = "INSERT INTO product( cat_id, prd_name, prd_image, prd_price, prd_warranty, prd_accessories, prd_new, prd_promotion, prd_status, prd_featured, prd_details) VALUES ( '$cat_id', '$prd_name', '$prd_image', '$prd_price', '$prd_warranty', '$prd_accessories', '$prd_new', '$prd_promotion', '$prd_status', '$prd_featured', '$prd_details')";
     $query= mysqli_query($connect,$sql);
     //up load ảnh lên server
-    move_uploaded_file($prd_image_tmp,'img/products/.'.$prd_image);
+    move_uploaded_file($prd_image_tmp,'img/products/'.$prd_image);
     //chuyển hướng trang
     header('location: index.php?page_layout=product');
 }
  
 ?>
-		
+	<script src="ckeditor/ckeditor.js"></script>	
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
@@ -116,6 +116,7 @@
                                 <div class="form-group">
                                         <label>Mô tả sản phẩm</label>
                                         <textarea required name="prd_details" class="form-control" rows="3"></textarea>
+                                        <script >CKEDITOR.replace('prd_details')</script>
                                     </div>
                                 <button name="sbm" type="submit" class="btn btn-success">Thêm mới</button>
                                 <button type="reset" class="btn btn-default">Làm mới</button>

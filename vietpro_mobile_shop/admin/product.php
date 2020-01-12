@@ -96,8 +96,8 @@ $list_page .= '<li class="page-item"><a class="page-link" href="index.php?page_l
                                                                             else echo "Hết hàng"; ?></span></td>
                                     <td><?php echo $row['cat_name']; ?></td>
                                     <td class="form-group">
-                                        <a href="product-edit.html" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                        <a href="product-edit.html" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                                        <a href="index.php?page_layout=edit_product&prd_id=<?php echo $row['prd_id']; ?>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+                                        <a  onclick="return delItem('<?php echo $row['prd_name']; ?>')" href="del_product.php?prd_id=<?php echo $row['prd_id']; ?>" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                                     </td>
                                 </tr>
                             <?php
@@ -121,3 +121,8 @@ $list_page .= '<li class="page-item"><a class="page-link" href="index.php?page_l
     <!--/.row-->
 </div>
 <!--/.main-->
+<script>
+    function delItem(name){
+        return confirm('Bạn có muốn xóa sản phẩm: '+name+'?');
+    }
+</script>

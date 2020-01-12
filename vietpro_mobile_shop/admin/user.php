@@ -1,6 +1,48 @@
 
-		
-	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+<?php
+if (!defined('SECURITY')) {
+    die('Bạn ko có quyền truy cập');
+}
+?>
+<?php
+//phân trang
+if (isset($_GET["page"]))
+    $page = $_GET["page"]; //nếu biến $_GET["page"] tồn tại thì trang hiện tại là trang $_GET["page"]
+else $page = 1;
+//nếu trang hiện tại nhỏ hơn 1 thì gán bằng 1
+//gán số sp cần hiển thị trên trang
+$limit = 5;
+//tính start-key (vị trí bản ghi sẽ bắt đầu lấy):
+$start = ($page - 1) * $limit;
+//hàm 1 : đếm số bản ghi
+$num_row = mysqli_num_rows(mysqli_query($connect, "SELECT * FROM user"));
+$total_page = ceil($num_row / $limit); //tính tổng số trang sẽ chia,hàm làm tròn số
+//nút prev
+$list_page = '';
+$page_prev = $page - 1;
+if ($page_prev <= 0) {
+    $page_prev = 1;
+}
+$list_page .= ' <li class="page-item"><a class="page-link" href="index.php?page_layout=user&page=' . $page_prev . '">&laquo;</a></li>';
+//tính toán số trang và tăng giảm
+for ($i = 1; $i <= $total_page; $i++) {
+    if ($i == $page) {
+        $active = 'active';
+    } else {
+        $active = '';
+    }
+    $list_page .= '<li class="page-item ' . $active . '"><a class="page-link" href="index.php?page_layout=user&page=' . $i . '">' . $i . '</a></li>';
+}
+//nút next
+$page_next = $page + 1;
+if ($page_next > $total_page) {
+    $page_next = $total_page;
+}
+$list_page .= '<li class="page-item"><a class="page-link" href="index.php?page_layout=user&page=' . $page_next . '">&raquo;</a></li>';
+//
+?>	
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
 				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
@@ -14,7 +56,7 @@
 			</div>
 		</div><!--/.row-->
 		<div id="toolbar" class="btn-group">
-            <a href="thanhvien-add.html" class="btn btn-success">
+            <a href="index.php?page_layout=add_user" class="btn btn-success">
                 <i class="glyphicon glyphicon-plus"></i> Thêm thành viên
             </a>
         </div>
@@ -36,42 +78,42 @@
 						    </tr>
                             </thead>
                             <tbody>
+                            <?php
+									$sql = "SELECT * FROM user 
+											 ORDER BY user_id ASC LIMIT $start,$limit";
+									$query = mysqli_query($connect, $sql);
+									while ($row = mysqli_fetch_assoc($query)) {
+
+									?>
                                 <tr>
-                                    <td style="">1</td>
-                                    <td style="">Admin</td>
-                                    <td style="">admin@gmail.com</td>
-                                    <td><span class="label label-danger">Admin</span></td>
+                                    <td style=""><?php echo $row['user_id']; ?> </td>
+                                    <td style=""><?php echo $row['user_full']; ?></td>
+                                    <td style=""><?php echo $row['user_mail']; ?></td>
+                                    <td><span class="label label-<?php if($row['user_level'] == 1) echo "danger"; else echo "warning";?>"><?php if($row['user_level'] == 1) echo "Admin"; else echo "Member";  ?></span></td>
                                     <td class="form-group">
-                                        <a href="thanhvien-edit.html" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                        <a href="/" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                                        <a href="index.php?page_layout=edit_user&user_id=<?php echo $row['user_id']; ?>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+                                        <a onclick="return delItem('<?php echo $row['user_full']; ?>')" href="del_user.php?user_id=<?php echo $row['user_id']; ?>" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                                     </td>
                                 </tr>
-                                <tr>
-                                        <td style="">2</td>
-                                        <td style="">Nguyễn Văn A</td>
-                                        <td style="">nguyenvana@gmail.com</td>
-                                        <td><span class="label label-warning">Member</span></td>
-                                        <td class="form-group">
-                                            <a href="thanhvien-edit.html" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                            <a href="/" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
-                                        </td>
-                                    </tr>
+                                    <?php }?>
                             </tbody>
 						</table>
                     </div>
                     <div class="panel-footer">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                            <?php echo $list_page;
+                            ?>
                             </ul>
                         </nav>
                     </div>
 				</div>
 			</div>
 		</div><!--/.row-->	
-	</div>	<!--/.main-->
+    </div>	<!--/.main-->
+    <script>
+    function delItem(name){
+        return confirm('Bạn có muốn xóa thành viên này: '+name+'?');
+    }
+    </script>
 
